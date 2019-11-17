@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>CTF 体験</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <form class="form-inline my-3">
+      <div class="form-group mb-2">
+        <input type="text" name="q" class="form-control" placeholder="職種検索" value="{{ query }}">
+      </div>
+      <button type="submit" class="btn btn-primary mb-2 mx-sm-4">検索</button>
+    </form>
+    {% if query != '' %}
+      <p><span class="text-danger">{{ query }}</span>の検索結果</p>
+    {% endif %}
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">姓</th>
+          <th scope="col">名</th>
+          <th scope="col">職種</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in result %}
+          <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.last_name }}</td>
+            <td>{{ user.first_name }}</td>
+            <td>{{ user.job }}</td>
+          </tr>  
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
