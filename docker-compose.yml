@@ -2,8 +2,6 @@ version: '3.3'
 services:
   app-python:
     container_name: app-python
-    command: >
-      bash -c "pip install -r ./requirements.txt && /bin/bash"
     build:
       context: ./python
       dockerfile: Dockerfile

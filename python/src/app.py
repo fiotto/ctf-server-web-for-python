@@ -14,35 +14,23 @@ Handler = http.server.SimpleHTTPRequestHandler
 
 class MyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        result = None
         conn = pymysql.connect(host='mysql',
                     user='root',
                     password='password',
                     db='ctf_db',
                     charset='utf8',
                     cursorclass=pymysql.cursors.DictCursor)
-
         try:
             url = urlparse(self.path)
+
             if url.path == '/':
                 params = urllib.parse.parse_qs(url.query)
                 query = params.get('q', [''])[0]
-                print('query')
-                print(url)
-                print(url.query)
-                print(query)
-                print('----------')
-
-                try:
-                    with conn.cursor() as cursor:
-                        sql = "SELECT * FROM users"
-                        sql = "SELECT * FROM users WHERE delete_flag=FALSE AND job LIKE '%" + query + "%'"    
-                        print(sql)
-                        cursor.execute(sql)
-                        result = cursor.fetchall()
-                        print(result)
-                finally:
-                    conn.close()
+                
+                with conn.cursor() as cursor:
+                    sql = "SELECT * FROM users WHERE delete_flag=FALSE AND job LIKE '%" + query + "%'"    
+                    cursor.execute(sql)
+                    result = cursor.fetchall()
 
                 env = Environment(loader=FileSystemLoader('.'))
                 template = env.get_template('index.html')
@@ -68,6 +56,8 @@ class MyHandler(BaseHTTPRequestHandler):
             self.end_headers()
 
             self.wfile.write(str(e).encode('utf-8'))
+        finally:
+            conn.close()
 
 with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
     print("serving at port", PORT)
