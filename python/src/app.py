@@ -1,16 +1,11 @@
-import http.server
 import socketserver
+from http.server import BaseHTTPRequestHandler, HTTPServer, SimpleHTTPRequestHandler
+from urllib.parse import urlparse, parse_qs
 
-from http.server import BaseHTTPRequestHandler, HTTPServer
-
-from urllib.parse import urlparse
-import urllib
-
-from jinja2 import Template, Environment, FileSystemLoader
 import pymysql.cursors
+from jinja2 import Template, Environment, FileSystemLoader
 
 PORT = 8000
-Handler = http.server.SimpleHTTPRequestHandler
 
 class MyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -24,7 +19,7 @@ class MyHandler(BaseHTTPRequestHandler):
             url = urlparse(self.path)
 
             if url.path == '/':
-                params = urllib.parse.parse_qs(url.query)
+                params = parse_qs(url.query)
                 query = params.get('q', [''])[0]
                 
                 with conn.cursor() as cursor:

@@ -20,7 +20,9 @@ INSERT INTO users (first_name, last_name, job)
     ("三郎", "田中", "インフラエンジニア"),
     ("花子", "佐藤", "デザイナー");
 INSERT INTO users (first_name, last_name, job, delete_flag)
-    VALUES ("一郎", "渡辺", "myctf{scf_sql_injection_flag}", TRUE); # フラグ1つ目(同じテーブル)
+    VALUES ("一郎", "渡辺", "myctf{scf_sql_injection_flag}", TRUE); /* フラグ1つ目(同じテーブル) */
+
+DROP TABLE IF EXISTS flag;
 
 CREATE TABLE flag (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -30,4 +32,4 @@ CREATE TABLE flag (
 )DEFAULT CHARACTER SET=utf8;
 
 INSERT INTO flag (flag)
-    VALUES ("myctf{next_flag_[/var/ctf/flag.md]}"); # フラグ2つ目(別のテーブル)
+    VALUES ("myctf{next_flag_[/var/ctf/flag.md]}"); /* フラグ2つ目(別のテーブル) */
