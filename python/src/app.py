@@ -14,6 +14,7 @@ class MyHandler(BaseHTTPRequestHandler):
                     password='password',
                     db='ctf_db',
                     charset='utf8',
+                    autocommit=True,
                     cursorclass=pymysql.cursors.DictCursor)
         try:
             url = urlparse(self.path)
@@ -23,16 +24,17 @@ class MyHandler(BaseHTTPRequestHandler):
                 query = params.get('q', [''])[0]
                 
                 with conn.cursor() as cursor:
-                    sql = "SELECT * FROM users WHERE delete_flag=FALSE AND job LIKE '%" + query + "%'"    
+                    sql = f"SELECT * FROM users WHERE delete_flag=FALSE AND job LIKE '%{query}%';"
+                    print(sql)
                     cursor.execute(sql)
-                    result = cursor.fetchall()
+                    users = cursor.fetchall()
 
                 env = Environment(loader=FileSystemLoader('.'))
                 template = env.get_template('index.html')
                 
                 data = {
                     'query': query,
-                    'result': result
+                    'users': users
                 }
                 disp_text = template.render(data)
 
@@ -43,6 +45,8 @@ class MyHandler(BaseHTTPRequestHandler):
                 self.wfile.write(disp_text.encode('utf-8'))
             else:
                 self.send_response(404)
+                self.send_header('Content-type', 'text/html')
+                self.end_headers()
         except Exception as e:
             print(e)
 
